@@ -4,7 +4,7 @@
 > Chaque itération démarre sans mémoire. Termine chaque réponse par exactement une ligne : `STATUS: CONTINUE` ou `STATUS: LOT_{{NN}}_DONE` ou `STATUS: LOT_{{NN}}_BLOCKED`.
 
 ## MISSION
-Faire passer au vert les tests d'acceptation du lot {{NN}} (`docs/lots.md`, critères {{criteres}}), et rien d'autre. Livrable final : une PR `lot-{{NN}}` vers `main`, CI verte, description citant les critères couverts, le nombre d'itérations, ce qui a été laissé de côté et pourquoi.
+Faire passer au vert les tests d'acceptation du lot {{NN}} (`docs/lots.md`, critères {{criteres}}), et rien d'autre. Livrable final : la branche `lot-{{NN}}` poussée sur `origin`, prête pour une PR (que l'orchestrateur ouvre juste après, `gh` n'étant pas disponible dans cet environnement), avec un résumé dans la progression citant les critères couverts, le nombre d'itérations, ce qui a été laissé de côté et pourquoi.
 
 ## RÈGLES ABSOLUES
 1. Première action : `git branch --show-current` → `lot-{{NN}}`, sinon arrête-toi. `main` intouchable, zéro push forcé, zéro merge.
@@ -18,7 +18,7 @@ Faire passer au vert les tests d'acceptation du lot {{NN}} (`docs/lots.md`, crit
 ## SOUS-LOTS (un par itération)
 - [ ] Sous-lot 0 : lire la carte, le lot, les tests rouges ; écrire le plan de sous-lots dans la progression. Aucun code.
 {{sous_lots}}
-- [ ] Sous-lot final : revue par `regie:contradicteur` du diff (`git diff main...lot-{{NN}}`), corrections, PR ouverte avec description complète.
+- [ ] Sous-lot final : revue par `regie:contradicteur` du diff (`git diff main...lot-{{NN}}`), corrections, puis `git push -u origin lot-{{NN}}`. Ne pas tenter `gh pr create` (absent de cet environnement) ; l'orchestrateur ouvre la PR juste après via l'API GitHub.
 
 ## VÉRIFICATION (chaque itération, avant commit)
 1. `{{cmd_typecheck}}` → 0 erreur
@@ -31,5 +31,5 @@ Faire passer au vert les tests d'acceptation du lot {{NN}} (`docs/lots.md`, crit
 Même obstacle après 3 itérations : `BLOCKED.md` (symptôme, essais, deux options), carte en `changements_demandes`, puis `STATUS: LOT_{{NN}}_BLOCKED`. À l'itération N−3 : stabilise, documente.
 
 ## DEFINITION OF DONE
-- Tous les sous-lots cochés ; tests {{criteres}} verts ; typecheck et lint verts ; `docs/` inchangé ; PR ouverte ; mémo du Contradicteur répondu dans la carte ; `main` intacte.
+- Tous les sous-lots cochés ; tests {{criteres}} verts ; typecheck et lint verts ; `docs/` inchangé ; branche `lot-{{NN}}` poussée sur `origin` ; mémo du Contradicteur répondu dans la carte ; `main` intacte.
 Alors, et seulement alors : `STATUS: LOT_{{NN}}_DONE`.
