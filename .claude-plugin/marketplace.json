@@ -1,0 +1,14 @@
+{
+  "name": "regie",
+  "owner": {
+    "name": "Noé Piantoni"
+  },
+  "plugins": [
+    {
+      "name": "regie",
+      "source": "./",
+      "description": "La Régie : d'une idée à un pilote, avec des agents autonomes et un Contradicteur."
+    }
+  ],
+  "description": "Plugins de la Régie : mener une idée jusqu'à un pilote avec des agents Claude Code autonomes."
+}

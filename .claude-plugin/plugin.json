@@ -1,0 +1,10 @@
+{
+  "name": "regie",
+  "displayName": "Régie",
+  "version": "0.2.0",
+  "description": "Équipe d'agents Claude Code qui mène une idée jusqu'à un pilote : cadrage, méthode Musk, spec, architecture, tests d'abord, lots, pilote. Agents autonomes, Contradicteur, veto 24 h, loops bornés.",
+  "author": {
+    "name": "Noé Piantoni"
+  },
+  "license": "MIT"
+}
