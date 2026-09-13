@@ -34,6 +34,14 @@ version: 0.1.0
 doivent **échouer** avant tout code. La CI les lance. La carte se ferme quand
 `tests: N rouges, 0 vert` est vérifié.
 
+**Pour chaque module importé par un test d'un lot futur, écrire aussi un stub typé qui
+lève une erreur explicite** (« à implémenter au lot NN »), sinon le typecheck échoue sur
+tout le dépôt au lieu des seuls tests visés (bug R-7, voir LESSONS.md). Dans le modèle de
+CI : typecheck et lint restent bloquants sur chaque push ; le step de tests passe en
+`continue-on-error: true` jusqu'au lot de Recette, avec un commentaire qui explique
+pourquoi (bug R-8, voir LESSONS.md) — sinon chaque push affiche une CI rouge alors que
+rien n'est cassé.
+
 ## Porte de qualité
 - Chaque critère de la spec apparaît dans un lot et dans le plan de tests.
 - Chaque ADR a au moins deux options comparées.

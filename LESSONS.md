@@ -54,3 +54,30 @@ contrat concerné par PR, puis la marquer « intégrée ». Viser moins de vingt
   n'existe pas, jamais rempli d'un texte placeholder. La carte Architecture ajoute les
   trois commandes réelles à `CLAUDE.md` ET à `.claude/settings.json`.
 - Statut : intégrée le 2026-09-13 dans `scripts/nouvelle-idee.sh` et `skills/architecture/SKILL.md`.
+
+## R-7 — Tests écrits avant le code cassent le typecheck de tout le dépôt (2026-09-13, idée d'origine : Cœur relatif)
+- Symptôme : `tsc --noEmit` échoue sur l'ensemble du dépôt, pas seulement sur les tests
+  visés, dès que la carte « Tests d'acceptation » écrit les dix-huit tests avant que
+  leurs modules n'existent (import vers un fichier absent).
+- Cause : aucun stub typé pour les modules pas encore construits ; TypeScript ne
+  distingue pas « ce module n'existe pas encore, c'est voulu » de « ce module manque
+  par erreur ».
+- Règle : pour chaque module importé par un test d'un lot futur, écrire un stub typé
+  qui lève une erreur explicite (« à implémenter au lot NN »), avec les bonnes
+  signatures. Le typecheck redevient vert sur tout le dépôt ; les tests restent rouges,
+  mais à l'échelle de l'assertion plutôt que de l'échec de résolution de module.
+- Statut : active. À intégrer dans la skill `architecture` (carte « Tests d'acceptation »)
+  et `tests-dabord`.
+
+## R-8 — La CI ne peut pas exiger « tous les tests verts » avant le dernier lot (2026-09-13, idée d'origine : Cœur relatif)
+- Symptôme : chaque push affiche la CI en échec sur GitHub dès que la carte « Tests
+  d'acceptation » est approuvée, alors que rien n'est cassé : c'est l'état voulu par la
+  règle 5 de `PROCESS.md` (tests rouges jusqu'à leur lot).
+- Cause : le workflow de CI traite `npm test` comme une porte bloquante sur l'ensemble
+  du dépôt, incompatible avec des tests intentionnellement rouges pour des lots futurs.
+- Règle : dans le modèle de workflow, le typecheck et le lint restent bloquants sur
+  chaque push (ce sont de vraies régressions si rouges) ; le step de tests passe en
+  `continue-on-error: true` avec un commentaire expliquant pourquoi, jusqu'à ce que le
+  lot de Recette soit atteint. Chaque lot vérifie lui-même l'absence de régression avant
+  sa propre fusion, dans sa carte.
+- Statut : active. À intégrer dans le modèle de CI produit par la carte Architecture.
