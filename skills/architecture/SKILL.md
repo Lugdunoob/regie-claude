@@ -23,8 +23,10 @@ version: 0.1.0
 5. **Lots** : `docs/lots.md`. Chaque lot : les critères couverts, les fichiers attendus,
    l'ordre, la durée estimée, le budget en dollars. Règle : le lot 1 fait passer au moins
    un critère du détail signature. Aucun lot ne dépasse une journée de travail d'agent.
-6. **`AGENTS.md`** à la racine du dépôt : pointe vers ces documents, donne les commandes
+6. **`CLAUDE.md`** à la racine du dépôt : pointe vers ces documents, donne les commandes
    de vérification (typecheck, lint, tests), et interdit de toucher `docs/` depuis un lot.
+   **Ajouter les mêmes trois commandes à `.claude/settings.json` (`permissions.allow`)**,
+   sinon un loop headless ne peut pas les exécuter sans confirmation (bug R-6, voir LESSONS.md).
 
 ## Carte « Tests d'acceptation »
 

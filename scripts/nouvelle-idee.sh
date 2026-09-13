@@ -6,8 +6,14 @@ SLUG="${1:?slug}"; IDEE="${2:?idée}"; SOC="${3:-$SLUG}"
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || git init -q
 mkdir -p docs/cartes docs/adr .loop/prompts .claude
+# NE PAS substituer {{cmd_typecheck}}/{{cmd_lint}}/{{cmd_test}} ici : un même texte de
+# substitution sur les trois lignes de templates/settings.json produirait trois permissions
+# Bash identiques et fausses (bug corrigé le 2026-09-13, voir LESSONS.md R-6). Ces trois
+# commandes sont ajoutées par la carte 05 Architecture, dans CLAUDE.md ET dans
+# .claude/settings.json, une fois la pile choisie.
 sub() { sed -e "s|{{idee}}|$IDEE|g" -e "s|{{slug}}|$SLUG|g" -e "s|{{societe}}|$SOC|g" \
             -e "s|{{cmd_typecheck}}|à compléter en carte 05|g" -e "s|{{cmd_lint}}|à compléter en carte 05|g" -e "s|{{cmd_test}}|à compléter en carte 05|g" "$1"; }
+sub_settings() { sed -e "s|{{idee}}|$IDEE|g" -e "s|{{slug}}|$SLUG|g" -e "s|{{societe}}|$SOC|g" "$1"; }
 [ -f CLAUDE.md ] || sub "$HERE/templates/CLAUDE.md" > CLAUDE.md
 sub "$HERE/templates/programme.md" > docs/programme.md
 for p in cadrage plan pilote; do sub "$HERE/templates/loop-$p.md" | sed "s|{{programme}}|$p|g" > ".loop/prompts/loop-$p.md"; done
@@ -16,7 +22,7 @@ cp "$HERE/templates/ralph.sh" .loop/ralph.sh; chmod +x .loop/ralph.sh
 mkdir -p .loop/scripts .github/workflows
 cp "$HERE/scripts/etat.py" "$HERE/scripts/miroir-github.sh" .loop/scripts/; chmod +x .loop/scripts/*
 [ -f .github/workflows/etat.yml ] || cp "$HERE/templates/github-workflow-etat.yml" .github/workflows/etat.yml
-[ -f .claude/settings.json ] || sub "$HERE/templates/settings.json" > .claude/settings.json
+[ -f .claude/settings.json ] || sub_settings "$HERE/templates/settings.json" > .claude/settings.json
 cat > ".loop/${SLUG}-progress.md" <<EOF2
 # Progression : $IDEE
 

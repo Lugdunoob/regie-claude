@@ -1,9 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash({{cmd_typecheck}})",
-      "Bash({{cmd_lint}})",
-      "Bash({{cmd_test}})",
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git checkout *)",

@@ -40,3 +40,17 @@ contrat concerné par PR, puis la marquer « intégrée ». Viser moins de vingt
 - Cause : pas de suivi de la part gardée.
 - Règle : chaque rétro estime la part gardée par carte ; sous 50 %, resserrer la skill ou repasser en manuel.
 - Statut : intégrée le 2026-09-12 dans la skill `retro`.
+
+## R-6 — Placeholders de commandes jamais vraiment substitués dans settings.json (2026-09-13, idée d'origine : Cœur relatif)
+- Symptôme : `.claude/settings.json` contenait trois fois `Bash(à compléter en carte 05)`
+  au lieu des vraies commandes de vérification, découvert juste avant de lancer le
+  premier loop de lot.
+- Cause : `nouvelle-idee.sh` appliquait la même substitution générique (destinée à
+  `CLAUDE.md`, où c'est un texte lisible) au fichier `settings.json`, où c'est une
+  permission Bash : les trois lignes devenaient identiques et fausses.
+- Règle : ne jamais réutiliser un même texte de substitution « à compléter » pour un
+  fichier de configuration lu par la machine (permissions, CI) et pour un fichier lu par
+  un humain (documentation) ; le premier doit rester absent tant que la vraie valeur
+  n'existe pas, jamais rempli d'un texte placeholder. La carte Architecture ajoute les
+  trois commandes réelles à `CLAUDE.md` ET à `.claude/settings.json`.
+- Statut : intégrée le 2026-09-13 dans `scripts/nouvelle-idee.sh` et `skills/architecture/SKILL.md`.
