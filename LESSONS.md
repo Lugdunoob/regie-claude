@@ -81,3 +81,15 @@ contrat concerné par PR, puis la marquer « intégrée ». Viser moins de vingt
   lot de Recette soit atteint. Chaque lot vérifie lui-même l'absence de régression avant
   sa propre fusion, dans sa carte.
 - Statut : active. À intégrer dans le modèle de CI produit par la carte Architecture.
+
+## R-9 — `git push -u origin` refusé par un motif de permission qui n'autorisait que `git push origin` (2026-09-14, idée d'origine : Cœur relatif)
+- Symptôme : le loop du lot 4 a vu `git push -u origin lot-04` réclamer une approbation
+  trois fois de suite, alors que `.claude/settings.json` autorise `Bash(git push origin *)`.
+- Cause : le motif de permission compare le texte après « git push », `-u origin lot-04`
+  ne correspond pas littéralement à `origin *`. Le flag `-u` avant `origin` change le
+  texte, pas seulement le comportement.
+- Règle : `templates/settings.json` autorise maintenant les deux formes,
+  `Bash(git push origin *)` et `Bash(git push -u origin *)`. L'agent a bien fait de ne
+  pas insister indéfiniment sur la même commande bloquée : il a changé de forme
+  (`git push` puis suivi de branche séparé) plutôt que de contourner la permission.
+- Statut : intégrée le 2026-09-14 dans `templates/settings.json`.
