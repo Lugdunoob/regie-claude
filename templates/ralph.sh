@@ -9,13 +9,14 @@ LOG_DIR=".loop/runs/${SLUG}-$(date +%Y%m%d-%H%M%S)"; mkdir -p "$LOG_DIR"
 MAIN_SHA="$(git rev-parse main)"
 git checkout -B "$SLUG" 2>/dev/null || git checkout "$SLUG"
 echo lot > .loop/phase
+echo "$SLUG $(date -u +%Y-%m-%dT%H:%M:%SZ)" > .loop/en-cours
 TAG="$(echo "$SLUG" | tr 'a-z-' 'A-Z_')"
 for i in $(seq 1 "$MAX_ITER"); do
   echo "=== ${SLUG} itération $i/$MAX_ITER ==="
   OUT="$LOG_DIR/iter-$i.log"
   claude -p "$(cat "$PROMPT_FILE")" --permission-mode acceptEdits 2>&1 | tee "$OUT"
-  grep -q "STATUS: ${TAG}_DONE" "$OUT" && { echo "terminé à l'itération $i"; rm -f .loop/phase; exit 0; }
-  grep -q "STATUS: ${TAG}_BLOCKED" "$OUT" && { echo "bloqué à l'itération $i, voir BLOCKED.md"; rm -f .loop/phase; exit 2; }
-  [ "$(git rev-parse main)" = "$MAIN_SHA" ] || { echo "main a bougé, arrêt d'urgence"; rm -f .loop/phase; exit 3; }
+  grep -q "STATUS: ${TAG}_DONE" "$OUT" && { echo "terminé à l'itération $i"; rm -f .loop/phase .loop/en-cours; exit 0; }
+  grep -q "STATUS: ${TAG}_BLOCKED" "$OUT" && { echo "bloqué à l'itération $i, voir BLOCKED.md"; rm -f .loop/phase .loop/en-cours; exit 2; }
+  [ "$(git rev-parse main)" = "$MAIN_SHA" ] || { echo "main a bougé, arrêt d'urgence"; rm -f .loop/phase .loop/en-cours; exit 3; }
 done
-echo "budget épuisé sans complétion, voir $LOG_DIR"; rm -f .loop/phase; exit 1
+echo "budget épuisé sans complétion, voir $LOG_DIR"; rm -f .loop/phase .loop/en-cours; exit 1

@@ -8,6 +8,7 @@ Mener les cartes 01 Cadrage, 02 Méthode Musk et 03 Spécification de « {{idee}
 Livrable final : `docs/cadrage.md`, `docs/exigences.md`, `docs/spec.md`, et les trois cartes approuvées avec journal de décision.
 
 ## RÈGLES ABSOLUES
+0. Première ligne de la toute première itération : `echo "{{programme}} $(date -u +%Y-%m-%dT%H:%M:%SZ)" > .loop/en-cours` (créé une fois, jamais retiré en cours de route). Dernière itération avant la promesse : `rm -f .loop/en-cours`.
 1. `main` est intouchable. Première action de chaque itération : `git branch --show-current` ; si `main`, crée ou bascule sur `regie/{{programme}}`.
 2. Zéro push forcé, zéro merge dans `main`. Le push de la branche est autorisé.
 3. Un commit par carte approuvée : `carte(NN): approuvée`, et un par renvoi : `carte(NN): renvoyée, <motif>`.
