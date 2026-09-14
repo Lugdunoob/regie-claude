@@ -93,3 +93,15 @@ contrat concerné par PR, puis la marquer « intégrée ». Viser moins de vingt
   pas insister indéfiniment sur la même commande bloquée : il a changé de forme
   (`git push` puis suivi de branche séparé) plutôt que de contourner la permission.
 - Statut : intégrée le 2026-09-14 dans `templates/settings.json`.
+
+## R-10 — Le workflow etat faisait tourner les tests sans avoir installé les dépendances (2026-09-14, idée d'origine : Cœur relatif)
+- Symptôme : `scripts/tableau-de-bord.py` plantait en CI (`FileNotFoundError` sur le
+  rapport JSON de vitest) alors qu'il tournait très bien en local.
+- Cause : `templates/github-workflow-etat.yml` n'installait jamais les dépendances
+  Node avant d'appeler le script, contrairement à `ci.yml`. `npx vitest` sans
+  `node_modules` échoue silencieusement dans cet environnement.
+- Règle : le modèle de workflow `etat` installe maintenant les dépendances
+  (`actions/setup-node` + `npm install`) avant de régénérer quoi que ce soit qui fait
+  tourner du code. `scripts/tableau-de-bord.py` échoue aussi plus proprement si le
+  rapport de tests manque (avertissement + continue, jamais une trace Python brute).
+- Statut : intégrée le 2026-09-14 dans `templates/github-workflow-etat.yml` et `scripts/tableau-de-bord.py`.
